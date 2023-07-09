@@ -6,7 +6,7 @@ const createUser = catchAsync(async (req, res) => {
   const user = req.body;
 
   const result = await authService.createUserInDB(user);
-  console.log(result);
+
   sendResponse(res, {
     statusCode: 200,
     success: true,
