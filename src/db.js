@@ -1,11 +1,12 @@
 const { Pool } = require("pg");
+const config = require("./config");
 
 const pool = new Pool({
-  host: "localhost",
-  port: 9000,
-  database: "ToDoApp",
-  user: "postgres",
-  password: "123456789",
+  host: config.db.host,
+  port: config.db.database_port,
+  database: config.db.database,
+  user: config.db.user,
+  password: config.db.password,
 });
 
 module.exports = pool;
