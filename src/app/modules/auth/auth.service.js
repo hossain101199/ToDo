@@ -20,7 +20,7 @@ const loginUser = async (payload) => {
 
   const result = await pool.query(query, values);
   const user = result.rows[0];
-  console.log(user);
+
   if (user) {
     if (user.password === password) {
       const { id, name, phonenumber } = user;
