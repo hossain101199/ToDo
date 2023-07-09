@@ -7,11 +7,11 @@ const createUserInDB = async (payload) => {
   const { name, gender, designation, phoneNumber, password } = payload;
 
   const query =
-    "INSERT INTO users (name, gender, designation, phoneNumber, password, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, current_timestamp, current_timestamp) RETURNING *";
+    "INSERT INTO users (name, gender, designation, phoneNumber, password, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, current_timestamp, current_timestamp) RETURNING id, name, gender, designation, phoneNumber, created_at, updated_at";
   const values = [name, gender, designation, phoneNumber, password];
 
-  const createdUser = await pool.query(query, values);
-  return createdUser.rows[0];
+  const createdUser = (await pool.query(query, values)).rows[0];
+  return createdUser;
 };
 
 const loginUser = async (payload) => {
