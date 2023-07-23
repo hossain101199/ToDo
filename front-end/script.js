@@ -148,42 +148,6 @@ function createTodo(event) {
     });
 }
 
-function fetchTodoList(accessToken) {
-  // Make a GET request to fetch the todo list
-  fetch("http://localhost:8000/api/v1/todos", {
-    headers: {
-      Authorization: `${accessToken}`,
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      // Handle fetch todo list response
-      if (data.success) {
-        // Clear existing todo list
-        const todoList = document.getElementById("todo-items");
-        todoList.innerHTML = "";
-
-        // Display user's todo list
-        const todoItems = data.data;
-
-        todoItems.forEach((item) => {
-          const li = document.createElement("li");
-          li.textContent = item.title;
-          todoList.appendChild(li);
-        });
-      } else {
-        // Show error message
-        alert(data.message);
-      }
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      alert(
-        "An error occurred while fetching the todo list. Please try again."
-      );
-    });
-}
-
 function updateTodoStatus(todoId, isDone) {
   // Get access token from localStorage or session
   const accessToken = localStorage.getItem("accessToken");
@@ -246,7 +210,6 @@ function deleteTodoItem(todoId) {
       alert("An error occurred while deleting the todo. Please try again.");
     });
 }
-
 function fetchTodoList(accessToken) {
   // Make a GET request to fetch the todo list
   fetch("http://localhost:8000/api/v1/todos", {
@@ -266,26 +229,21 @@ function fetchTodoList(accessToken) {
         const todoItems = data.data;
 
         todoItems.forEach((item) => {
-          const li = document.createElement("li");
-          li.textContent = item.title;
-          const description = document.createElement("div");
-          description.textContent = item.description;
+          const itemHTML = `
+            <li class="aToDo">
+       <div> 
+       <input type="checkbox" onchange="updateTodoStatus(${
+         item.id
+       }, this.checked)" ${item.is_done ? "checked" : ""}>
+       <p> ${item.title}</p>
+       <button onclick="deleteTodoItem(${item.id})">Delete</button>
+      </div>
+              <p>Description: ${item.description}</p>
+            </li>
+         
+          `;
 
-          const deleteButton = document.createElement("button");
-          deleteButton.textContent = "Delete";
-          deleteButton.addEventListener("click", () => deleteTodoItem(item.id));
-          li.appendChild(deleteButton);
-
-          const statusCheckbox = document.createElement("input");
-          statusCheckbox.type = "checkbox";
-          statusCheckbox.checked = item.is_done;
-          statusCheckbox.addEventListener("change", (event) => {
-            updateTodoStatus(item.id, event.target.checked);
-          });
-          li.appendChild(statusCheckbox);
-
-          todoList.appendChild(li);
-          todoList.appendChild(description);
+          todoList.innerHTML += itemHTML;
         });
       } else {
         // Show error message
